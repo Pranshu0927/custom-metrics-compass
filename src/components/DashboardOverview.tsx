@@ -1,254 +1,212 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownRight, ArrowUpRight, DollarSign, Users, ShoppingCart, TrendingUp } from "lucide-react";
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell
-} from "recharts";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart2, TrendingUp, Users, DollarSign, Activity, FileSpreadsheet, Mail, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Sample data for charts
-const revenueData = [
-  { name: 'Jan', revenue: 5400 },
-  { name: 'Feb', revenue: 7600 },
-  { name: 'Mar', revenue: 6800 },
-  { name: 'Apr', revenue: 9200 },
-  { name: 'May', revenue: 8100 },
-  { name: 'Jun', revenue: 11500 },
-  { name: 'Jul', revenue: 14200 },
-  { name: 'Aug', revenue: 13100 },
-  { name: 'Sep', revenue: 15800 },
+const data = [
+  { name: 'Jan', sales: 4000, profit: 2400, customers: 240 },
+  { name: 'Feb', sales: 3000, profit: 1398, customers: 210 },
+  { name: 'Mar', sales: 2000, profit: 9800, customers: 290 },
+  { name: 'Apr', sales: 2780, profit: 3908, customers: 200 },
+  { name: 'May', sales: 1890, profit: 4800, customers: 218 },
+  { name: 'Jun', sales: 2390, profit: 3800, customers: 250 },
 ];
-
-const productData = [
-  { name: 'Product A', sales: 4000 },
-  { name: 'Product B', sales: 3000 },
-  { name: 'Product C', sales: 2000 },
-  { name: 'Product D', sales: 2780 },
-  { name: 'Product E', sales: 1890 },
-  { name: 'Product F', sales: 2390 },
-];
-
-const customerSegmentData = [
-  { name: 'New', value: 400 },
-  { name: 'Returning', value: 300 },
-  { name: 'VIP', value: 200 },
-  { name: 'Inactive', value: 100 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const DashboardOverview = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  const handleExport = () => {
+    toast({
+      title: "Export Initiated",
+      description: "Your dashboard data is being prepared for export.",
+    });
+    
+    // Simulate export process
+    setTimeout(() => {
+      toast({
+        title: "Export Complete",
+        description: "Dashboard data has been exported to Excel.",
+      });
+    }, 1500);
+  };
+  
+  const handleEmailSetup = () => {
+    toast({
+      title: "Email Alert Configuration",
+      description: "Set up automated email alerts for your team.",
+    });
+  };
+  
+  const navigateToCharts = () => {
+    navigate("/charts");
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-gray-900">Business Overview</h2>
-        <div className="flex items-center gap-4">
-          <Select defaultValue="last30days">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="last7days">Last 7 days</SelectItem>
-              <SelectItem value="last30days">Last 30 days</SelectItem>
-              <SelectItem value="last90days">Last 90 days</SelectItem>
-              <SelectItem value="ytd">Year to date</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline">Export</Button>
-        </div>
-      </div>
-      
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$84,700</div>
-            <div className="flex items-center pt-1 text-xs text-green-500">
-              <ArrowUpRight className="h-4 w-4 mr-1" />
-              <span>+12.5%</span>
-              <span className="text-muted-foreground ml-1">from last period</span>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Sales</p>
+                <h3 className="text-2xl font-bold mt-1">$24,380</h3>
+                <p className="text-xs text-green-600 mt-1">+8.2% from last month</p>
+              </div>
+              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-primary" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+1,824</div>
-            <div className="flex items-center pt-1 text-xs text-green-500">
-              <ArrowUpRight className="h-4 w-4 mr-1" />
-              <span>+8.2%</span>
-              <span className="text-muted-foreground ml-1">from last period</span>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Profit Margin</p>
+                <h3 className="text-2xl font-bold mt-1">24.3%</h3>
+                <p className="text-xs text-red-600 mt-1">-2.1% from last month</p>
+              </div>
+              <div className="h-10 w-10 bg-green-500/10 rounded-full flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-green-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">6,248</div>
-            <div className="flex items-center pt-1 text-xs text-green-500">
-              <ArrowUpRight className="h-4 w-4 mr-1" />
-              <span>+5.7%</span>
-              <span className="text-muted-foreground ml-1">from last period</span>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Active Customers</p>
+                <h3 className="text-2xl font-bold mt-1">1,429</h3>
+                <p className="text-xs text-green-600 mt-1">+12.4% from last month</p>
+              </div>
+              <div className="h-10 w-10 bg-blue-500/10 rounded-full flex items-center justify-center">
+                <Users className="h-5 w-5 text-blue-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3.6%</div>
-            <div className="flex items-center pt-1 text-xs text-red-500">
-              <ArrowDownRight className="h-4 w-4 mr-1" />
-              <span>-0.8%</span>
-              <span className="text-muted-foreground ml-1">from last period</span>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Growth Rate</p>
+                <h3 className="text-2xl font-bold mt-1">18.6%</h3>
+                <p className="text-xs text-green-600 mt-1">+4.5% from last month</p>
+              </div>
+              <div className="h-10 w-10 bg-purple-500/10 rounded-full flex items-center justify-center">
+                <Activity className="h-5 w-5 text-purple-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-            <CardDescription>Monthly revenue data for the current period</CardDescription>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div>
+              <CardTitle>Sales Overview</CardTitle>
+              <CardDescription>Monthly sales performance</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={navigateToCharts}>
+              Edit Chart
+            </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart
-                data={revenueData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2075e8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#2075e8" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#2075e8"
-                  fillOpacity={1}
-                  fill="url(#colorRevenue)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Top Products</CardTitle>
-            <CardDescription>Sales by product</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={productData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-              >
+              <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="sales" fill="#4099ff" />
+                <Legend />
+                <Bar dataKey="sales" name="Sales" fill="#8884d8" />
+                <Bar dataKey="profit" name="Profit" fill="#82ca9d" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div>
+              <CardTitle>Customer Growth</CardTitle>
+              <CardDescription>Monthly customer trends</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={navigateToCharts}>
+              Edit Chart
+            </Button>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="customers" name="Customers" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* Actions Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Customer Segments</CardTitle>
-            <CardDescription>Distribution by customer type</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center items-center">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={customerSegmentData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {customerSegmentData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center space-y-3 text-center">
+              <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <BarChart2 className="h-6 w-6 text-blue-700" />
+              </div>
+              <h3 className="font-medium">Create Charts</h3>
+              <p className="text-sm text-muted-foreground">Design custom visualizations from your data</p>
+              <Button className="w-full" onClick={navigateToCharts}>
+                Create Charts <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader>
-            <CardTitle>Custom Metrics</CardTitle>
-            <CardDescription>Calculated from your custom formulas</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <h4 className="font-medium">Avg. Revenue Per Customer</h4>
-                  <p className="text-sm text-muted-foreground">Total Revenue / Customer Count</p>
-                </div>
-                <div className="text-xl font-bold">$46.44</div>
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center space-y-3 text-center">
+              <div className="h-12 w-12 bg-amber-100 rounded-full flex items-center justify-center">
+                <FileSpreadsheet className="h-6 w-6 text-amber-700" />
               </div>
-              
-              <div className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <h4 className="font-medium">Customer Acquisition Cost</h4>
-                  <p className="text-sm text-muted-foreground">Marketing Spend / New Customers</p>
-                </div>
-                <div className="text-xl font-bold">$28.12</div>
+              <h3 className="font-medium">Export Data</h3>
+              <p className="text-sm text-muted-foreground">Download your dashboard data to Excel</p>
+              <Button className="w-full" variant="outline" onClick={handleExport}>
+                Export to Excel <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center space-y-3 text-center">
+              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Mail className="h-6 w-6 text-green-700" />
               </div>
-              
-              <div className="flex justify-between items-center">
-                <div>
-                  <h4 className="font-medium">Retention Rate</h4>
-                  <p className="text-sm text-muted-foreground">Returning Customers / Total Customers</p>
-                </div>
-                <div className="text-xl font-bold">72%</div>
-              </div>
-              
-              <Button variant="outline" className="w-full mt-4">Add New Custom Metric</Button>
+              <h3 className="font-medium">Email Alerts</h3>
+              <p className="text-sm text-muted-foreground">Set up automated email reports</p>
+              <Button className="w-full" variant="outline" onClick={handleEmailSetup}>
+                Configure Alerts <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           </CardContent>
         </Card>

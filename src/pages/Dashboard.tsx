@@ -9,6 +9,7 @@ import DashboardOverview from "@/components/DashboardOverview";
 import FormulaEditor from "@/components/FormulaEditor";
 import DataExplorer from "@/components/DataExplorer";
 import { useToast } from "@/components/ui/use-toast";
+import ChartEditor from "@/components/ChartEditor";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -34,9 +35,10 @@ const Dashboard = () => {
           
           <main className="flex-1 p-6 bg-gray-50">
             <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full max-w-md grid-cols-3">
+              <TabsList className="grid w-full max-w-md grid-cols-4">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="formulas">Formulas</TabsTrigger>
+                <TabsTrigger value="charts">Charts</TabsTrigger>
                 <TabsTrigger value="data">Data</TabsTrigger>
               </TabsList>
               
@@ -46,6 +48,20 @@ const Dashboard = () => {
               
               <TabsContent value="formulas">
                 <FormulaEditor />
+              </TabsContent>
+              
+              <TabsContent value="charts">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Chart Editor</CardTitle>
+                    <CardDescription>
+                      Create and customize visualizations from your data
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartEditor />
+                  </CardContent>
+                </Card>
               </TabsContent>
               
               <TabsContent value="data">
