@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+                // BI tool specific colors
+                'bi-blue': {
+                    50: '#f0f7ff',
+                    100: '#e0f0ff',
+                    200: '#c0e0ff',
+                    300: '#80c0ff',
+                    400: '#4099ff',
+                    500: '#2075e8',
+                    600: '#1060d0',
+                    700: '#0050b0',
+                    800: '#004090',
+                    900: '#003070',
+                    950: '#001840',
+                },
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
